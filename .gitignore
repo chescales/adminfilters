@@ -1,0 +1,13 @@
+*.pyc
+*.log
+*.db
+*.sqlite3
+
+*.swp
+*.swo
+*.map
+
+.idea
+*.mo
+
+.DS_Store
