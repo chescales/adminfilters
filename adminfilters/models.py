@@ -41,3 +41,7 @@ class Pet(models.Model):
 
     def __unicode__(self):
         return "{} ({})".format(self.name, self.breed.name)
+
+    def get_specie(self):
+        return self.breed.specie
+    get_specie.short_description = 'Specie'
