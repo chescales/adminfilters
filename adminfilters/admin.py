@@ -3,7 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from django.contrib import admin
 
 from adminfilters.models import Specie, Breed, Pet
-from adminfilters.list_filters import BreedListFilter
+from adminfilters.list_filters import BreedListFilter, SpecieListFilter
 
 
 @admin.register(Specie)
@@ -14,6 +14,7 @@ class SpecieAdmin(admin.ModelAdmin):
 @admin.register(Breed)
 class BreedAdmin(admin.ModelAdmin):
     list_display = ('name', 'specie', )
+    list_filter = (SpecieListFilter, )
 
 
 @admin.register(Pet)
