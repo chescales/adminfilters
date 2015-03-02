@@ -7,11 +7,10 @@ from adminfilters.models import Specie, Breed, Pet
 
 class BreedListFilter(admin.SimpleListFilter):
     """
-    Human-readable title which will be displayed in the right admin sidebar just above the filter
-    options.
-
     This filter is an example of how to combine two different Filters to work together.
     """
+    # Human-readable title which will be displayed in the right admin sidebar just above the filter
+    # options.
     title = 'breed'
 
     # Parameter for the filter that will be used in the URL query.
@@ -51,6 +50,10 @@ class BreedListFilter(admin.SimpleListFilter):
 
 
 class SpecieListFilter(admin.SimpleListFilter):
+    """
+    This filter will always return a subset of the instances in a Model, either filtering by the
+    user choice or by a default value.
+    """
     # Human-readable title which will be displayed in the
     # right admin sidebar just above the filter options.
     title = 'specie'
@@ -74,7 +77,7 @@ class SpecieListFilter(admin.SimpleListFilter):
             list_of_species.append(
                 (str(specie.id), specie.name)
             )
-        return list_of_species
+        return sorted(list_of_species, key=lambda tp: tp[1])
 
     def queryset(self, request, queryset):
         """
