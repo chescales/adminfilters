@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from django.contrib import admin
 
-from adminfilters.models import Specie, Breed, Pet
+from adminfilters.models import Species, Breed
 
 
 class BreedListFilter(admin.SimpleListFilter):
@@ -17,7 +17,7 @@ class BreedListFilter(admin.SimpleListFilter):
     parameter_name = 'breed'
 
     # Custom attributes
-    related_filter_parameter = 'breed__specie__id__exact'
+    related_filter_parameter = 'breed__species__id__exact'
 
     def lookups(self, request, model_admin):
         """
@@ -28,9 +28,9 @@ class BreedListFilter(admin.SimpleListFilter):
         in the right sidebar.
         """
         list_of_questions = []
-        queryset = Breed.objects.order_by('specie_id')
+        queryset = Breed.objects.order_by('species_id')
         if self.related_filter_parameter in request.GET:
-            queryset = queryset.filter(specie_id=request.GET[self.related_filter_parameter])
+            queryset = queryset.filter(species_id=request.GET[self.related_filter_parameter])
         for breed in queryset:
             list_of_questions.append(
                 (str(breed.id), breed.name)
@@ -49,17 +49,17 @@ class BreedListFilter(admin.SimpleListFilter):
         return queryset
 
 
-class SpecieListFilter(admin.SimpleListFilter):
+class SpeciesListFilter(admin.SimpleListFilter):
     """
     This filter will always return a subset of the instances in a Model, either filtering by the
     user choice or by a default value.
     """
     # Human-readable title which will be displayed in the
     # right admin sidebar just above the filter options.
-    title = 'specie'
+    title = 'species'
 
     # Parameter for the filter that will be used in the URL query.
-    parameter_name = 'specie'
+    parameter_name = 'species'
 
     default_value = None
 
@@ -72,10 +72,10 @@ class SpecieListFilter(admin.SimpleListFilter):
         in the right sidebar.
         """
         list_of_species = []
-        queryset = Specie.objects.all()
-        for specie in queryset:
+        queryset = Species.objects.all()
+        for species in queryset:
             list_of_species.append(
-                (str(specie.id), specie.name)
+                (str(species.id), species.name)
             )
         return sorted(list_of_species, key=lambda tp: tp[1])
 
@@ -87,19 +87,19 @@ class SpecieListFilter(admin.SimpleListFilter):
         """
         # Compare the requested value to decide how to filter the queryset.
         if self.value():
-            return queryset.filter(specie_id=self.value())
+            return queryset.filter(species_id=self.value())
         return queryset
 
     def value(self):
         """
         Overriding this method will allow us to always have a default value.
         """
-        value = super(SpecieListFilter, self).value()
+        value = super(SpeciesListFilter, self).value()
         if value is None:
             if self.default_value is None:
-                # If there is at least one Specie, return the first by name. Otherwise, None.
-                first_specie = Specie.objects.order_by('name').first()
-                value = None if first_specie is None else first_specie.id
+                # If there is at least one Species, return the first by name. Otherwise, None.
+                first_species = Species.objects.order_by('name').first()
+                value = None if first_species is None else first_species.id
                 self.default_value = value
             else:
                 value = self.default_value
