@@ -27,14 +27,10 @@ class BreedListFilter(admin.SimpleListFilter):
         human-readable name for the option that will appear
         in the right sidebar.
         """
-        list_of_questions = []
         queryset = Breed.objects.order_by('species_id')
         if self.related_filter_parameter in request.GET:
             queryset = queryset.filter(species_id=request.GET[self.related_filter_parameter])
-        for breed in queryset:
-            list_of_questions.append(
-                (str(breed.id), breed.name)
-            )
+        list_of_questions = [(str(breed.id), breed.name) for breed in queryset]
         return sorted(list_of_questions, key=lambda tp: tp[1])
 
     def queryset(self, request, queryset):
@@ -71,12 +67,8 @@ class SpeciesListFilter(admin.SimpleListFilter):
         human-readable name for the option that will appear
         in the right sidebar.
         """
-        list_of_species = []
         queryset = Species.objects.all()
-        for species in queryset:
-            list_of_species.append(
-                (str(species.id), species.name)
-            )
+        list_of_species = [(str(species.id), species.name) for species in queryset]
         return sorted(list_of_species, key=lambda tp: tp[1])
 
     def queryset(self, request, queryset):
